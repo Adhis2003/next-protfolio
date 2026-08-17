@@ -1,186 +1,196 @@
-import React from "react";
-import Image from "next/image";
-import Card from "../Card";
-import { Timeline, TimelineItem } from "../Timeline";
-import { Wallpaper, Server, TabletSmartphone, Database } from "lucide-react";
-import Link from "next/link";
+"use client";
+
+import React, { useState, useEffect } from "react";
+import ProjectCard from "../ProjectCard";
+import BlogPlaceholder from "../BlogPlaceholder";
+import { FolderHeart, Search, Filter, BookOpen } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface ProjectItem {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  tags: string[];
+  category: "mobile" | "web" | "games";
+  challenges: string;
+  features: string[];
+  liveUrl?: string;
+  githubUrl?: string;
+}
+
+const PROJECTS_DATA: ProjectItem[] = [
+  {
+    id: "murmure",
+    title: "Wellness Portal",
+    description: "A mobile psychology application aimed at self-discovery, breathing exercises, and meditation tracking, supporting user data state sync and customized dashboard chapters.",
+    thumbnail: "/projects/murmure-patchwork.jpeg",
+    tags: ["React Native", "Expo", "Redux", "Node.js", "Express.js"],
+    category: "mobile",
+    challenges: "Synchronizing offline audio playback status and local caching during weak cell connectivity.",
+    features: ["Interactive breathing mode guides", "Custom chapters and lessons catalog", "Stateful progress tracking across chapters", "Real-time user chat capabilities"],
+    liveUrl: "https://murmure.expo.app",
+    githubUrl: "https://github.com/Adhis2003/Murmure-Front",
+  },
+  {
+    id: "coins-app",
+    title: "Coins Tracker App",
+    description: "A high-fidelity cryptocurrency tracker that fetches live price statistics from Delta APIs. Emphasizes repository patterns, structured error state boundaries, and robust caching.",
+    thumbnail: "/projects/coin-app-patchwork.jpeg",
+    tags: ["React Native", "Expo", "TanStack Query", "TypeScript"],
+    category: "mobile",
+    challenges: "Optimizing API rate limiting and handling offline state smoothly without screen freeze.",
+    features: ["Live price polling intervals", "Detailed interactive asset graphs", "Search and bookmark favorite currencies", "Auto-fallback to cached offline snapshot"],
+    githubUrl: "https://github.com/Adhis2003/coins-app",
+  },
+  {
+    id: "retrolove",
+    title: "Space Shooter",
+    description: "A highly customizable vertical space shooter game engineered with custom logic. Supports game settings edits for corporate events, weddings, or team sessions.",
+    thumbnail: "/projects/shipit-patchwork1.png",
+    tags: ["Python", "Pygame", "State Machine"],
+    category: "games",
+    challenges: "Maintaining consistent 60FPS physics frames on low-tier hardware configurations.",
+    features: ["Custom assets configuration JSON", "Dynamic scaling waves difficulty", "Retro soundtrack & sound effects sync", "High-score leaderboard storage file"],
+    githubUrl: "https://github.com/Adhis2003/retrolove",
+  },
+  // {
+  //   id: "portfolio",
+  //   title: "World-Class Dev Portfolio",
+  //   description: "The very portfolio site you are reading now. Engineered with high-fidelity micro-interactions, responsive folders, retro terminal emulator, and custom dark mode.",
+  //   thumbnail: "/projects/portfolio.png",
+  //   tags: ["React", "Next.js 16", "Tailwind CSS v4", "Framer Motion", "GSAP"],
+  //   category: "web",
+  //   challenges: "Achieving seamless folder height responsiveness across all breakpoints down to 320px.",
+  //   features: ["Responsive folder-flap page design", "Interactive CLI Command Shell", "Ctrl+K Command Palette actions", "Stateful achievements & confetti trigger"],
+  //   liveUrl: "/",
+  //   githubUrl: "https://github.com/Adhis2003/next-protfolio",
+  // },
+  {
+    id: "puzzlebricks",
+    title: "Puzzle-Bricks Showcase",
+    description: "A catalog and custom blog documenting original modular Lego© building guides and brick solutions, featuring clean content delivery.",
+    thumbnail: "/projects/puzzlebricks.png",
+    tags: ["WordPress", "SEO", "Responsive Design"],
+    category: "web",
+    challenges: "Optimizing high-resolution building instruction PDFs for mobile performance loading.",
+    features: ["Custom category instructions filter", "Mobile-optimized image grids", "Email newsletter subscription hook", "Search engine indexing optimizations"],
+    liveUrl: "https://www.puzzle-bricks.fr",
+  }
+];
 
 const ProjectsSection: React.FC = () => {
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<"all" | "mobile" | "web" | "games">("all");
+
+  useEffect(() => {
+    // Unlock Curious Explorer badge if they visited all sections
+    const visited = JSON.parse(localStorage.getItem("visited_tabs") || "{}");
+    visited["Projects"] = true;
+    localStorage.setItem("visited_tabs", JSON.stringify(visited));
+    
+    if (Object.keys(visited).length === 4) {
+      window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "explore" } }));
+    }
+  }, []);
+
+  // Filter projects by search query and category
+  const filteredProjects = PROJECTS_DATA.filter((proj) => {
+    const matchesSearch =
+      proj.title.toLowerCase().includes(search.toLowerCase()) ||
+      proj.tags.some((tag) => tag.toLowerCase().includes(search.toLowerCase()));
+    
+    const matchesCategory =
+      activeCategory === "all" || proj.category === activeCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div>
-      <div className=" text-center p-3">
-        <h2 className="text-2xl font-permanent">Projects and creations</h2>
+    <div className="space-y-8 pb-10">
+      {/* Page Header */}
+      <div className="text-center py-4 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md rounded-2xl border border-stone-200 dark:border-stone-800">
+        <h2 className="text-2xl font-extrabold text-stone-900 dark:text-white flex items-center justify-center gap-2">
+          <FolderHeart className="text-blue-500" size={22} />
+          Projects Showcase
+        </h2>
+        <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 font-semibold max-w-md mx-auto">
+          Search code repositories or filter by categories to explore core applications built.
+        </p>
       </div>
 
-      <hr className="h-px m-6 bg-neutral-quaternary" />
-
-      <div className="p-4 m-4 border-2 rounded-2xl border-stone-300">
-        <div className="">
-          <Card
-            title="Murmure"
-            thumbnail={
-              <Image src="/projects/murmure-patchwork.jpeg" width={600} height={300} alt="screenshots murmure" />
-            }
-            elements={["React-native", "expo", "Redux"]}>
-            <p className="text-justify mb-4">
-              Murmure is a psychology application that aim to help the user learn more about himself and about how his
-              mind works. <br />
-              In murmure you will find multiple leçons organised by chapters to understand progressively the concepts as
-              much as flashcards to review quickly each concepts. <br />
-              You can find also different tools like Meditations with different modes and length and also a Breathing
-              mode to help you relax your body. <br />
-              Last but not least a tchat is present in the application to discuss about things you have on your mind or
-              about the cursus. <br />
-              <br />
-              Try a live demo of this project: &nbsp;
-              <a
-                href="https://murmure.expo.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                Murmure
-              </a>
-              <br />
-              <br />
-              View the source code for the Frontend:&nbsp;
-              <a
-                href="https://github.com/barthelemypousset/Murmure-Front"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                GitHub
-              </a>
-              <br />
-              View the source code for the Backend:&nbsp;
-              <a
-                href="https://github.com/barthelemypousset/Murmure-Back"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                GitHub
-              </a>
-              <br />
-              <br />
-              Read the analysis, organisation and built of this project (in french):&nbsp;
-              <a
-                href="/docs/murmure-dossier.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                Murmure - Project
-              </a>
-            </p>
-          </Card>
-          <Card
-            title="Coins-App"
-            thumbnail={
-              <Image src="/projects/coin-app-patchwork.jpeg" width={300} height={600} alt="screenshots coin-app" />
-            }
-            elements={["React-native", "expo", "TanStack Query"]}>
-            <p className="text-justify mb-4">
-              A simple React Native application that fetches and displays cryptocurrency coins from Delta API (crypto).
-              The app allows users to browse coins, view details for a specific coin, and refresh the data. <br />
-              <br />
-              <b>
-                The project focuses on clean architecture, data fetching strategy, error handling, and offline behavior
-                rather than UI complexity.
-              </b>
-              <br /> <br />
-              View the source code of this APP:&nbsp;
-              <a
-                href="https://github.com/barthelemypousset/coins-app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                GitHub
-              </a>
-            </p>
-          </Card>
-          <Card
-            title="Retrolove"
-            thumbnail={
-              <Image
-                src="/projects/shipit-patchwork1.png"
-                width={800}
-                height={300}
-                alt="screenshots shipit"
-                className="rounded-lg shadow-lg"
-              />
-            }
-            elements={["Python", "Pygame"]}>
-            <p className="text-justify mb-4">
-              Retrolove is a is a highly customizable scrolling space shooter. <br />
-              The customization allow you to change different element of the game to shape it for different types of
-              events (seminars, weddings, event). <br />
-              The gameplay feature multiple levels where the goal is to survive for the longest and make the most points
-              ! <br />
-              Multiple weapons, multiple enemies and a sick soundtrack await you in this high paced game ! <br />
-              <br />
-              <br />
-              View the source code of this project and try it yourself:&nbsp;
-              <a
-                href="https://github.com/barthelemypousset/retrolove"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                GitHub
-              </a>
-            </p>
-          </Card>
-          <Card
-            title="Next Portfolio (This website !)"
-            thumbnail={<Image src="/projects/portfolio.png" width={400} height={300} alt="logo lacapsule" />}
-            elements={["React", "Next.js", "tailwind", "Vercel"]}>
-            <p className="text-justify mb-4">
-              Next portfolio is the very website you are scroling on right now :)
-              <br />
-              <br />
-              View the source code of this project and try it yourself:&nbsp;
-              <a
-                href="https://github.com/barthelemypousset/next-protfolio"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                GitHub
-              </a>
-            </p>
-          </Card>
-          <Card
-            title="Puzzle-Bricks"
-            thumbnail={
-              <Image
-                src="/projects/puzzlebricks.png"
-                width={500}
-                height={300}
-                alt="logo lacapsule"
-                className="rounded-lg shadow-lg"
-              />
-            }
-            elements={["Wordpress"]}>
-            <p className="text-justify mb-4">
-              Puzzle-bricks is a personnal project about brain teasers built out of Lego©. I designed them myself. Build
-              them with the manual and try to find the solution for each !
-              <br />
-              <br />
-              View the website of this project:&nbsp;
-              <a
-                href="https://www.puzzle-bricks.fr"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-500 underline">
-                www.puzzle-bricks.fr
-              </a>
-            </p>
-          </Card>
-          <Card
-            title="Personnal Server stack"
-            thumbnail={<Image src="/projects/proxmox.png" width={600} height={300} alt="logo lacapsule" />}
-            elements={["Linux", "Proxmox", "PFsense", "IPtables", "Docker", "Terraform"]}>
-            <p className="text-justify mb-4">
-              I own and maintain a server to host my differents projects and customer application.{" "}
-            </p>
-          </Card>
+      {/* Search & Filter Controls */}
+      <div className="p-4 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md rounded-2xl border border-stone-200 dark:border-stone-800 flex flex-col md:flex-row gap-4 items-center justify-between">
+        {/* Search Input */}
+        <div className="relative w-full md:max-w-xs">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+          <input
+            type="text"
+            placeholder="Search projects or skills..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-xs rounded-xl focus:outline-none focus:ring-1 focus:ring-blue-500 text-stone-800 dark:text-stone-200 placeholder-stone-400"
+          />
         </div>
+
+        {/* Category Filters */}
+        <div className="flex gap-2 flex-wrap justify-center w-full md:w-auto">
+          {(["all", "mobile", "web", "games"] as const).map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-95 ${
+                activeCategory === cat
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/10"
+                  : "bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-850"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Projects Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AnimatePresence mode="popLayout">
+          {filteredProjects.map((proj) => (
+            <motion.div
+              key={proj.id}
+              layout
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ProjectCard
+                title={proj.title}
+                description={proj.description}
+                thumbnail={proj.thumbnail}
+                tags={proj.tags}
+                challenges={proj.challenges}
+                features={proj.features}
+                liveUrl={proj.liveUrl}
+                githubUrl={proj.githubUrl}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {filteredProjects.length === 0 && (
+        <p className="text-center text-xs text-stone-400 dark:text-stone-500 py-10 font-bold">
+          No projects matching your search parameters.
+        </p>
+      )}
+
+      {/* Technical Blog Feed */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+          <BookOpen className="text-blue-500" size={18} />
+          Technical Blog Feed
+        </h3>
+        <BlogPlaceholder />
       </div>
     </div>
   );

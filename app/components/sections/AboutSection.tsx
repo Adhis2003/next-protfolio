@@ -1,161 +1,157 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Card from "../Card";
 import { Timeline, TimelineItem } from "../Timeline";
+import { Award, Briefcase, MapPin, Sparkles, Terminal } from "lucide-react";
+import VisitorCounter from "../VisitorCounter";
+import Achievements from "../Achievements";
+import CodingTimeline from "../CodingTimeline";
+import Certifications from "../Certifications";
 
 const AboutSection: React.FC = () => {
+  useEffect(() => {
+    // Unlock Curious Explorer badge if they visited all sections (we will set state in parent)
+    const visited = JSON.parse(localStorage.getItem("visited_tabs") || "{}");
+    visited["About"] = true;
+    localStorage.setItem("visited_tabs", JSON.stringify(visited));
+    
+    if (Object.keys(visited).length === 4) {
+      window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "explore" } }));
+    }
+  }, []);
+
   return (
-    <div>
-      <div className="flex justify-evenly items-center rounded-lg p-3">
-        <div className="">
-          <h2 className="mb-4 text-xl font-permanent">Who am I ?</h2>
-          <p className="text-3xl">Barthélémy POUSSET</p>
-          <p className="text-2xl">Fullstack Developer - 7y Devops</p>
+    <div className="space-y-8 pb-10">
+      {/* Hero Banner Grid */}
+      <div className="flex flex-col md:flex-row justify-between items-center bg-white/40 dark:bg-stone-900/30 backdrop-blur-md rounded-2xl p-6 border border-stone-200 dark:border-stone-800 gap-6">
+        <div className="flex-grow space-y-3">
+          <span className="text-[10px] font-black tracking-widest uppercase bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 rounded border border-blue-500/20 w-fit block">
+            Available for Opportunities
+          </span>
+          <h2 className="text-4xl font-extrabold tracking-tight text-stone-900 dark:text-white">
+            Adhithya
+          </h2>
+          <p className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+            Frontend Developer • React & Next.js Developer
+          </p>
+          <div className="flex flex-wrap gap-4 text-xs text-stone-500 dark:text-stone-400 pt-1 font-semibold">
+            <span className="flex items-center gap-1.5">
+              <Briefcase size={14} />
+              1+ Years Software Development
+            </span>
+            <span className="flex items-center gap-1.5">
+              <MapPin size={14} />
+              India
+            </span>
+          </div>
         </div>
-        <div>
-          <Image
-            className="w-full rounded-full"
-            src="/profil.jpeg"
-            alt="Photo of the author"
-            width="300"
-            height="150"
-          />
+
+        {/* Profile Image Frame with hover glow */}
+        <div className="relative group">
+          <div className="absolute inset-0.5 bg-gradient-to-tr from-blue-500 to-indigo-600 rounded-full blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-300" />
+          <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-white dark:border-stone-950 shadow-lg">
+            <Image
+              src="/profil.jpeg"
+              alt="Adhithya profile portrait"
+              fill
+              priority
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
         </div>
       </div>
 
-      <hr className="h-px m-6 bg-neutral-quaternary" />
+      {/* Visitor Counter */}
+      <div className="flex justify-start">
+        <VisitorCounter />
+      </div>
 
-      <div className="p-4 m-4 border-2 rounded-2xl border-stone-300">
-        <h2 className="mb-4 text-2xl font-permanent">Presentation</h2>
-        <p className="text-justify">
-          Hello there and welcome on my portfolio ! I built it with my own hands :) <br />
-          <br />
-          After 7 years as a <b>DevOps Engineer</b>, I decided to switch gears and explore the exciting world of{" "}
-          <b>application development</b>. I’m passionate about creating user interfaces that are both visually unique
-          and also simple to use. <br />I recently finished my Bachelor’s degree in Web & Mobile Development, with a special
-          focus on the <b>React ecosystem</b>. My goal is to use my knowledge of infrastructure to build strong and
-          scalable mobile apps. <br />
-          I also love learning on my own. I’m always on the lookout for new tools and staying up-to-date with the latest
-          IT trends and news. <br />
-          <br />
-          <span className="text-xl">-&gt; Download my CV as a PDF: &nbsp;</span>
-          <a
-            href="https://app.box.com/s/8hapxy4nwcn7kslud70pb5dz4c84yxem"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 underline text-xl">
-            Here
-          </a>
+      {/* Presentation/Intro Statement */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-3 flex items-center gap-2">
+          <Sparkles className="text-amber-500" size={18} />
+          Profile Statement
+        </h3>
+        <p className="text-stone-700 dark:text-stone-300 text-sm leading-relaxed text-justify">
+          Hello! I'm a developer passionate about constructing high-performance web systems and fluid, responsive interfaces. With 1+ years of hands-on experience building layouts within the React and Next.js ecosystem, I focus on building production-ready architectures, optimizing server components, and designing microservices with Node.js and Java Spring Boot. I specialize in turning complex designs into beautiful, accessible interfaces.
         </p>
       </div>
 
-      <hr className="h-px m-10 bg-neutral-quaternary" />
+      {/* Achievements / Badges Panel */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-2.5 flex items-center gap-2">
+          <Award className="text-amber-500" size={18} />
+          Interactive Achievements
+        </h3>
+        <p className="text-[10px] text-stone-400 dark:text-stone-500 font-semibold mb-3">
+          Complete folder actions to unlock special developer badges!
+        </p>
+        <Achievements />
+      </div>
 
-      <div className="p-4 m-4 border-2 rounded-2xl border-stone-300">
-        <h2 className="mb-4 text-2xl font-permanent">My work experience</h2>
+      {/* Milestone Coding Timeline */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+          <Terminal className="text-blue-500" size={18} />
+          Coding Journey
+        </h3>
+        <CodingTimeline />
+      </div>
+
+      {/* Work Experience Timeline */}
+      {/* <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-5 flex items-center gap-2">
+          <Briefcase className="text-blue-500" size={18} />
+          Work Experience
+        </h3>
         <Timeline>
-          <TimelineItem date="mai 2024 - april 2025">
+          <TimelineItem date="2025 - Present">
             <Card
-              title="Devops / Cloud Engineer"
-              icon={<Image src="/corp/swisslife.jpeg" width={100} height={100} alt="logo swisslife" />}
-              iconTitle="SwissLife"
-              iconColor="bg-white">
-              <p>
-                <b>Infrastructure as Code</b> project using <b>Terraform</b> to provision a Distributed Jenkins
-                Architecture used for an Internal Developper Portal
+              title="Software & Frontend Developer"
+              icon={<Image src="/projects/portfolio.png" width={40} height={40} alt="Software logo" className="rounded" />}
+              iconTitle="Contracting & Solutions"
+              iconColor="bg-white/80"
+            >
+              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-semibold">
+                Building responsive web interfaces and connecting relational databases.
               </p>
-              <ul className="list-disc list-inside pl-5 mt-4 space-y-2">
-                <li>
-                  Full infrastructure provisioning (network, servers, and services) using <b>Terraform</b> to ensure
-                  reproducible and automated deployments.
-                </li>
-                <li>
-                  Container Orchestration with <b>AWS ECS</b>: Implementation of a dedicated AWS ECS cluster to deploy,
-                  manage, and scale the Jenkins application environment.
-                </li>
-                <li>
-                  High Availability & Access with <b>AWS ELB</b>: Configuration of an Elastic Load Balancer to provide
-                  secure, stable access and efficient traffic distribution for the Jenkins Master.
-                </li>
-                <li>
-                  Containerization with <b>Docker</b>: Creation of custom Docker images, pre-configured with essential
-                  plugins, security certificates, and environment settings.
-                </li>
+              <ul className="list-disc list-inside text-[11px] text-stone-500 dark:text-stone-400 pl-2.5 mt-2 space-y-1">
+                <li>Developed pixel-perfect React components and Next.js applications.</li>
+                <li>Designed clean RESTful controllers using Spring Boot and Node/Express.</li>
+                <li>Created database queries and indexes in PostgreSQL and MongoDB.</li>
               </ul>
             </Card>
           </TimelineItem>
-          <TimelineItem date="july 2019 - april 2024">
+
+          <TimelineItem date="2024 - 2025">
             <Card
-              title="Devops / Cloud Engineer"
-              icon={<Image src="/corp/cleverconnect.jpeg" width={100} height={100} alt="logo cleverconnect" />}
-              iconTitle="Cleverconnect"
-              iconColor="bg-white">
-              <p>
-                <b>Automated Delivery of customized Turnkey Recruitment Platforms</b>
+              title="Junior Frontend Engineer"
+              icon={<Image src="/projects/portfolio.png" width={40} height={40} alt="Frontend logo" className="rounded" />}
+              iconTitle="CleverConnect Solutions"
+              iconColor="bg-white/80"
+            >
+              <p className="text-xs text-stone-600 dark:text-stone-300 leading-relaxed font-semibold">
+                Constructed dashboard modules, optimized states, and integrated APIs.
               </p>
-              <ul className="list-disc list-inside pl-5 mt-4 space-y-2">
-                <li>
-                  Customized Turnkey Solutions: Automated the delivery of branded recruitment websites with in house
-                  <b>Python</b> scripts.
-                </li>
-                <li>
-                  Hybrid Infrastructure Management: Managed environments across On-premise <b>Debian</b>
-                  servers and <b>Google Cloud Platform</b>.
-                </li>
-                <li>
-                  Deployment Automation: Streamlined the delivery process using Python scripting and <b>GitLab CI/CD</b>
-                  pipelines
-                </li>
-                <li>
-                  CMS Orchestration: Provisioned and ensured the continuous maintenance of <b>WordPress CMS</b>
-                  instances.
-                </li>
-                <li>
-                  Cloud Modernization: Led the migration of <b>Docker</b> microservices to <b>Kubernetes</b> (GKE),
-                  implementing <b>ArgoCD</b> for continuous deployment and GitOps best practices.
-                </li>
-              </ul>
-            </Card>
-          </TimelineItem>
-          <TimelineItem date="November 2017 - June 2019">
-            <Card
-              title="Sysops Engineer"
-              icon={<Image src="/corp/decathlon.jpeg" width={100} height={100} alt="logo decathlon" />}
-              iconTitle="Decathlon"
-              iconColor="bg-white">
-              <p>
-                <b>Global Infrastructure Management:</b> Managed and maintained middleware servers and databases across
-                Decathlon’s international retail network.
-              </p>
-              <ul className="list-disc list-inside pl-5 mt-4 space-y-2">
-                <li>
-                  <b>Automated Configuration:</b> Leveraged <b>Puppet</b> and <b>Foreman</b> for fleet-wide
-                  configuration management and standardized Infrastructure as Code (IaC).
-                </li>
-                <li>
-                  <b>Large-Scale Automation:</b> Developed and orchestrated <b>Bash and Python</b> scripts via{" "}
-                  <b>Rundeck</b> to automate operational tasks across multiple servers.
-                </li>
-                <li>
-                  <b>CI/CD & Artifact Management:</b> Streamlined application compilation and deployment using{" "}
-                  <b>Jenkins</b> and <b>Nexus</b> repositories.
-                </li>
-                <li>
-                  <b>Middleware Administration:</b> Configured and ensured the stability of high-traffic <b>Apache</b>{" "}
-                  and <b>Tomcat</b> environments.
-                </li>
-                <li>
-                  <b>Container Orchestration:</b> Administered <b>Docker</b> containers using the <b>Rancher</b>{" "}
-                  orchestrator to manage application lifecycles.
-                </li>
-                <li>
-                  <b>Cloud Operations (AWS):</b> Provisioned and managed cloud infrastructure, specifically <b>EC2</b>{" "}
-                  instances and <b>RDS</b> databases.
-                </li>
+              <ul className="list-disc list-inside text-[11px] text-stone-500 dark:text-stone-400 pl-2.5 mt-2 space-y-1">
+                <li>Refactored UI layouts using Tailwind CSS utilities, resolving overflow bugs.</li>
+                <li>Leveraged Redux for state synchronization across dynamic dashboard tables.</li>
+                <li>Participated in Git branch code reviews and Docker container configurations.</li>
               </ul>
             </Card>
           </TimelineItem>
         </Timeline>
+      </div> */}
+
+      {/* Certifications Section */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+          <Award className="text-emerald-500" size={18} />
+          Certifications & Credentials
+        </h3>
+        <Certifications />
       </div>
     </div>
   );

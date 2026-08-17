@@ -26,14 +26,32 @@ const kalam = Kalam({
 
 
 export const metadata: Metadata = {
-  title: "Barth's Portfolio",
-  description: "Find here all everything about Barthélémy POUSSET's professional life and projects",
+  title: "Adhithya | Frontend Developer & React Architect",
+  description: "Explore the professional developer portfolio of Adhithya, a Frontend and Software Engineer specializing in React, Next.js, TypeScript, and Spring Boot architectures.",
+  keywords: "Adhithya, Frontend Developer, React Developer, Next.js Developer, Software Engineer, Portfolio, India, Spring Boot, Node.js",
+  authors: [{ name: "Adhithya" }],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${permanentMarker.variable} ${kalam.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": "Adhithya",
+              "url": "https://github.com/Adhis2003",
+              "jobTitle": "Frontend Developer",
+              "sameAs": [
+                "https://www.linkedin.com/in/adhithya-frontend-developer/",
+                "https://github.com/Adhis2003"
+              ]
+            })
+          }}
+        />
         {children}
       </body>
     </html>

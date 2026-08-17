@@ -1,92 +1,91 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Card from "../Card";
 import { Timeline, TimelineItem } from "../Timeline";
-import { Wallpaper, Server, TabletSmartphone, Database } from "lucide-react";
+import { Award, Hammer, GraduationCap, Github } from "lucide-react";
+import SkillTree from "../SkillTree";
+import GitHubStats from "../GitHubStats";
 
 const SkillsSection: React.FC = () => {
+  useEffect(() => {
+    // Register tab visit forCurious Explorer badge
+    const visited = JSON.parse(localStorage.getItem("visited_tabs") || "{}");
+    visited["Skills"] = true;
+    localStorage.setItem("visited_tabs", JSON.stringify(visited));
+    
+    if (Object.keys(visited).length === 4) {
+      window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "explore" } }));
+    }
+  }, []);
+
   return (
-    <div>
-      <div className=" text-center p-3">
-        <h2 className="text-2xl font-permanent">Skills and Education</h2>
+    <div className="space-y-8 pb-10">
+      {/* Intro Header */}
+      <div className="text-center py-4 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md rounded-2xl border border-stone-200 dark:border-stone-800">
+        <h2 className="text-2xl font-extrabold text-stone-900 dark:text-white flex items-center justify-center gap-2">
+          <Hammer className="text-blue-500" size={22} />
+          Skills & Technical Dashboard
+        </h2>
+        <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 font-semibold max-w-md mx-auto">
+          Explore interactive skill categories, developer proficiencies, and live GitHub contributions.
+        </p>
       </div>
 
-      <hr className="h-px m-6 bg-neutral-quaternary" />
-
-      <div className="skills-shit p-4 m-4 border-2 rounded-2xl border-stone-300">
-        <h2 className="pb-4 text-2xl font-permanent">My Skills</h2>
-        <div className="lg:grid lg:grid-cols-2">
-          <Card
-            title="Frontend Development"
-            icon={<Wallpaper size={24} strokeWidth={1.75} color="#ffffff" />}
-            elements={["React", "JavaScript", "TypeScript", "Next.js", "Tailwind CSS", "Vue.js", "Redux"]}
-            iconColor="bg-blue-400"
-          />
-          <Card
-            title="Backend Development"
-            icon={<Server size={24} strokeWidth={1.75} color="#ffffff" />}
-            elements={["Node.js", "Express.js", "Python", "PostgreSQL", "MongoDB", "Rest API" ]}
-            iconColor="bg-emerald-500"
-          />
-          <Card
-            title="Mobile Development"
-            icon={<TabletSmartphone size={24} strokeWidth={1.75} color="#ffffff" />}
-            elements={["React native", "Expo", "Flutter"]}
-            iconColor="bg-pink-500"
-          />
-          <Card
-            title="Devops Enginering"
-            icon={<Database size={24} strokeWidth={1.75} color="#ffffff" />}
-            elements={["Linux", "Shell scripting", "Python Scripting", "AWS", "Docker", "Terraform", "Ansible"]}
-            iconColor="bg-amber-500"
-          />
-        </div>
+      {/* Interactive Skill Tree */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+          <Award className="text-amber-500" size={18} />
+          Interactive Tech Stack Tree
+        </h3>
+        <SkillTree />
       </div>
 
-      <hr className="h-px m-10 bg-neutral-quaternary" />
+      {/* GitHub Commits & Activity */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-4 flex items-center gap-2">
+          <Github className="text-stone-800 dark:text-white" size={18} />
+          Live Git Performance
+        </h3>
+        <GitHubStats />
+      </div>
 
-      <div className="Education-shit p-4 m-4 border-2 rounded-2xl border-stone-300">
-        <h2 className="pb-4 text-2xl font-permanent">My Education</h2>
+      {/* Education Timeline */}
+      <div className="p-5 bg-white/40 dark:bg-stone-900/30 backdrop-blur-md border border-stone-200 dark:border-stone-800 rounded-2xl">
+        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-5 flex items-center gap-2">
+          <GraduationCap className="text-blue-500" size={18} />
+          Education & Credentials
+        </h3>
         <Timeline>
-          <TimelineItem date="Oct 2026 - Dec 2026">
+          <TimelineItem date="2020 - 2024">
             <Card
-              title="Designer and Developer of Web and Mobile applications"
-              icon={<Image src="/corp/lacapsule.png" width={100} height={100} alt="logo LaCapsule" />}
-              iconTitle="LaCapsule"
-              text="Bachelor - EQF level 6"
-              elements={["Backend Developpement", "Frontend Developpement", "Mobile Developement"]}
-              iconColor="bg-white"
-            />
+              title="Bachelor of Technology in Information Technology"
+              icon={<GraduationCap size={24} className="text-blue-500" />}
+              iconTitle="University Education"
+              text="Undergraduate Degree"
+              elements={["Software Engineering", "Algorithms & Structures", "Relational Databases", "Web Architectures"]}
+              iconColor="bg-blue-500/10"
+            >
+              <p className="text-xs text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
+                Core coursework focused on object-oriented programming, network protocols, database query normalization, and distributed application structures.
+              </p>
+            </Card>
           </TimelineItem>
-          <TimelineItem date="Sept 2016 - June 2017">
+
+          <TimelineItem date="2018 - 2020">
             <Card
-              title="Devops and Cloud Engineer"
-              icon={<Image src="/corp/ynov.png" width={100} height={100} alt="logo Ynov" />}
-              iconTitle="Campus Ynov"
-              text="Master - EQF level 7"
-              elements={["Cloud administration", "CI/CD automation", "Devops Methodology"]}
-              iconColor="bg-white"
-            />
-          </TimelineItem>
-          <TimelineItem date="Sept 2014 - June 2016">
-            <Card
-              title="Network and Datacenter Administrator"
-              icon={<Image src="/corp/cesi.png" width={100} height={100} alt="logo Cesi" />}
-              iconTitle="Cesi"
-              text="Bachelor - EQF level 6"
-              elements={["Datacenter administration", "network administration", "Infrastructure maintenance"]}
-              iconColor="bg-white"
-            />
-          </TimelineItem>
-          <TimelineItem date="Sept 2012 - June 2014">
-            <Card
-              title="Management and maintenance of IT equipment"
-              icon={<Image src="/corp/cesi.png" width={100} height={100} alt="logo Cesi" />}
-              iconTitle="Cesi"
-              text="License - EQF level 5"
-              elements={["IT Support", "Employee Formation", "Employee assitance"]}
-              iconColor="bg-white"
-            />
+              title="Higher Secondary - Computer Science Focus"
+              icon={<GraduationCap size={24} className="text-emerald-500" />}
+              iconTitle="Secondary Education"
+              text="Advanced Computing Track"
+              elements={["Java Basics", "SQL databases", "Boolean logic"]}
+              iconColor="bg-emerald-500/10"
+            >
+              <p className="text-xs text-stone-500 dark:text-stone-400 mb-3 leading-relaxed">
+                Introduced to standard computer science theories, foundational data algorithms, database schemas, and structured software development pipelines.
+              </p>
+            </Card>
           </TimelineItem>
         </Timeline>
       </div>

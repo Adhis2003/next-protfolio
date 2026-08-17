@@ -14,9 +14,25 @@ const ContactForm: React.FC = () => {
     }
     setStatus("sending");
 
-    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+    console.log("EmailJS config:", {
+  serviceID,
+  templateID,
+  publicKey: publicKey ? "Loaded" : "Missing",
+});
+
+    if (!serviceID || !templateID || !publicKey) {
+      console.warn("EmailJS credentials missing. Running mock send timeout.");
+      setTimeout(() => {
+        setStatus("success");
+        window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "contact" } }));
+        form.current?.reset();
+        setTimeout(() => setStatus("idle"), 3000);
+      }, 1200);
+      return;
+    }
 
     emailjs
       .sendForm(serviceID, templateID, form.current, {
@@ -26,14 +42,15 @@ const ContactForm: React.FC = () => {
         () => {
           console.log("SUCCESS!");
           setStatus("success");
+          window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "contact" } }));
           form.current?.reset();
-          setTimeout(() => setStatus("idle"), 3000); // Reset status after 3 seconds
+          setTimeout(() => setStatus("idle"), 3000);
         },
         (error) => {
           console.log("FAILED...", error.text);
           setStatus("error");
           setErrorMessage(error.text);
-          setTimeout(() => setStatus("idle"), 5000); // Reset status after 5 seconds
+          setTimeout(() => setStatus("idle"), 5000);
         },
       );
   };
@@ -41,6 +58,17 @@ const ContactForm: React.FC = () => {
   return (
     <form ref={form} onSubmit={sendEmail}>
       <div className="p-4 m-4 border-2 rounded-2xl border-stone-300 flex flex-col gap-4">
+        <div>
+          <label htmlFor="user_email">Name</label>
+          <input
+            id="name"
+            type="text"
+            name="user_name"
+            placeholder="Your name"
+            required
+            className="w-full p-2 border rounded"
+          />
+        </div>
         <div>
           <label htmlFor="user_email">Email</label>
           <input

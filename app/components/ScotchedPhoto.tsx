@@ -15,7 +15,10 @@ const ScotchedPhoto: React.FC<ScotchedPhotoProps> = ({ image, containerClassName
   useEffect(() => {
     if (clickedScotches.size === 2) {
       // Add a small delay for the user to see the second click before it falls
-      const timer = setTimeout(() => setIsFalling(true), 100);
+      const timer = setTimeout(() => {
+        setIsFalling(true);
+        window.dispatchEvent(new CustomEvent("unlock_badge", { detail: { badgeId: "tape" } }));
+      }, 100);
       return () => clearTimeout(timer);
     }
   }, [clickedScotches]);
