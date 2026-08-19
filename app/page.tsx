@@ -116,12 +116,12 @@ export default function Home() {
       <ParticleBackground />
       <CustomCursor />
       <AIAssistant />
-      <CommandPalette onTabSelect={handleTabClick} onResetPhoto={() => setPhotoKey(prev => prev + 1)} />
+      {/* <CommandPalette onTabSelect={handleTabClick} onResetPhoto={() => setPhotoKey(prev => prev + 1)} /> */}
 
       {/* Floating System Bar */}
-      <div className="absolute top-4 right-4 z-[99] flex items-center gap-2">
+      {/* <div className="absolute top-4 right-4 z-[99] flex items-center gap-2">
         <ThemeSwitcher />
-      </div>
+      </div> */}
 
       <div
         ref={folderContainerRef}
