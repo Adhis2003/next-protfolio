@@ -166,7 +166,7 @@ export default function Home() {
           />
 
           <Image
-            src="/label_!.png"
+            src="/label(!).png"
             width="300"
             height="150"
             alt="Label of quality"
