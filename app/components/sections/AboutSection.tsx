@@ -34,7 +34,7 @@ const AboutSection: React.FC = () => {
             Adhithya
           </h2>
           <p className="text-lg font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-            Frontend Developer • React & Next.js Developer
+            Full Stack Developer • React • Java • Spring Boot
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-stone-500 dark:text-stone-400 pt-1 font-semibold">
             <span className="flex items-center gap-1.5">
@@ -75,8 +75,7 @@ const AboutSection: React.FC = () => {
           Profile Statement
         </h3>
         <p className="text-stone-700 dark:text-stone-300 text-sm leading-relaxed text-justify">
-          Hello! I'm a developer passionate about constructing high-performance web systems and fluid, responsive interfaces. With 1+ years of hands-on experience building layouts within the React and Next.js ecosystem, I focus on building production-ready architectures, optimizing server components, and designing microservices with Node.js and Java Spring Boot. I specialize in turning complex designs into beautiful, accessible interfaces.
-        </p>
+Hello! I’m a Full Stack Developer passionate about building high-performance web applications and intuitive, responsive interfaces. With 2.8 years of hands-on experience, I work across the React.js, Next.js, Java, and Spring Boot ecosystem, building scalable and production-ready applications. I focus on developing clean architectures, REST APIs, backend services, and efficient database solutions while creating seamless user experiences. I enjoy turning complex requirements into reliable, maintainable, and user-friendly products.        </p>
       </div>
 
       {/* Achievements / Badges Panel */}

@@ -81,9 +81,13 @@ export default function Home() {
       ) {
         const target = event.target as HTMLElement;
         // Don't close if clicking command palette or floating widgets
-        if (target.closest(".z-100") || target.closest(".z-[9999]") || target.closest(".z-[99999]")) {
-          return;
-        }
+        if (
+  target.closest(".z-100") ||
+  target.closest('[class~="z-[9999]"]') ||
+  target.closest('[class~="z-[99999]"]')
+) {
+  return;
+}
 
         if (activeTab) {
           setIsAnimating(true);
@@ -114,7 +118,7 @@ export default function Home() {
   return (
     <div className="relative h-screen bg-sky-50 dark:bg-stone-900 transition-colors duration-300 overflow-hidden">
       <ParticleBackground />
-      <CustomCursor />
+      {/* <CustomCursor /> */}
       <AIAssistant />
       {/* <CommandPalette onTabSelect={handleTabClick} onResetPhoto={() => setPhotoKey(prev => prev + 1)} /> */}
 
