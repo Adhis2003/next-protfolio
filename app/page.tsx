@@ -9,6 +9,7 @@ import AboutSection from "./components/sections/AboutSection";
 import SkillsSection from "./components/sections/SkillsSection";
 import ProjectsSection from "./components/sections/ProjectsSection";
 import ContactSection from "./components/sections/ContactSection";
+import { Analytics } from "@vercel/analytics/next"
 
 import ThemeSwitcher from "./components/ThemeSwitcher";
 import CustomCursor from "./components/CustomCursor";
@@ -42,7 +43,7 @@ export default function Home() {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
-    
+
     // Trigger badge unlock for Explorer if they open a tab
     const visited = JSON.parse(localStorage.getItem("visited_tabs") || "{}");
     visited[tabName] = true;
@@ -82,12 +83,12 @@ export default function Home() {
         const target = event.target as HTMLElement;
         // Don't close if clicking command palette or floating widgets
         if (
-  target.closest(".z-100") ||
-  target.closest('[class~="z-[9999]"]') ||
-  target.closest('[class~="z-[99999]"]')
-) {
-  return;
-}
+          target.closest(".z-100") ||
+          target.closest('[class~="z-[9999]"]') ||
+          target.closest('[class~="z-[99999]"]')
+        ) {
+          return;
+        }
 
         if (activeTab) {
           setIsAnimating(true);
@@ -120,6 +121,7 @@ export default function Home() {
       <ParticleBackground />
       {/* <CustomCursor /> */}
       <AIAssistant />
+      <Analytics />
       {/* <CommandPalette onTabSelect={handleTabClick} onResetPhoto={() => setPhotoKey(prev => prev + 1)} /> */}
 
       {/* Floating System Bar */}
